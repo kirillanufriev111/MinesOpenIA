@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>MinesOpenIA</title>
+</head>
+
+<body>
+    <div class="proga">
+        <div class="proga_head">
+            <h1>
+                <span>MinesAI</span>
+
+            </h1>
+            <img class="def" src="mines/def.png" width="300px" alt="">
+            <div class="loading"></div>
+            <div class="message">
+            </div>
+        </div>
+        <div class="potom">
+            <div class="kol-vo">
+                <h3>Количество ловушек</h3>
+            </div>
+            <disv class="loush">
+
+                <button class="next btn-left">-</button>
+                <p class="chislo">1</p>
+                <button class="next btn-right">+</button>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var leftButton = document.querySelector('.btn-left');
+                var rightButton = document.querySelector('.btn-right');
+                var numberParagraph = document.querySelector('.chislo');
+                var signalButton = document.querySelector('.btn');
+                var potom = document.querySelector('.potom');
+                var loadingDiv = document.querySelector('.loading');
+                var defImage = document.querySelector('.def');
+                var messageDiv = document.querySelector('.message'); // Получаем новый элемент для сообщения
+                var intervalActive = false;
+
+                var currentNumber = 1;
+                leftButton.addEventListener('click', function () {
+                    if (currentNumber > 1) {
+                        currentNumber -= 2;
+                        numberParagraph.textContent = currentNumber;
+                    }
+                });
+
+                rightButton.addEventListener('click', function () {
+                    if (currentNumber <= 5) {
+                        currentNumber += 2;
+                        numberParagraph.textContent = currentNumber;
+                    } else {
+                        console.log("Число достигло 7, дальнейшие изменения прекращены.");
+                    }
+                });
+
+                function startInterval() {
+                    if (intervalActive) {
+                        clearInterval(intervalId);
+                        defImage.style.display = "block"; // Восстанавливаем видимость изображения def
+                    }
+                    intervalActive = true;
+                    var messages = ["Пробиваем ваш ID через базу данных...", "Анализируем прошлые игры...", "Делаем подсчет...", ""];
+                    var currentIndex = 0;
+                    var firstMessageIntervalId = null; // Интервал для первой надписи
+
+                    // Интервал для первой надписи
+                    firstMessageIntervalId = setInterval(function () {
+                        loadingDiv.textContent = messages[0]; // Отображаем первую надпись без задержки
+                        clearInterval(firstMessageIntervalId); // Останавливаем интервал после отображения первой надписи
+                    }, 0);
+                    function getRandomInt(min, max) {
+                        return Math.floor(Math.random() * (max - min + 1)) + min;
+                    }
+                    signalButton.style.display = "none";
+                    potom.style.display = "none";
+                    // Интервал для последующих сообщений
+                    var intervalId = setInterval(function () {
+                        loadingDiv.textContent = messages[currentIndex];
+                        currentIndex++;
+                        if (currentIndex >= messages.length) {
+                            clearInterval(intervalId);
+                            var randomImageNumber = Math.floor(Math.random() * 10) + 1;
+                            var imageSrc = "mines/" + numberParagraph.textContent + "/" + randomImageNumber + ".png";
+                            document.querySelector(".def").style.display = "none";
+                            loadingDiv.innerHTML = '<img src="' + imageSrc + '" width="300px" alt="">';
+                            var winChance = getRandomInt(77, 85);
+                            // Изменяем содержимое нового элемента на сообщение
+                            messageDiv.textContent = "Вероятность выигрыша " + winChance + "%";
+                            var messageTimeoutId = setTimeout(function () {
+                                messageDiv.textContent = "";
+                            }, 2000);
+                            signalButton.style.display = "block";
+                            potom.style.display = "block";
+                        }
+                    }, 2000);
+                }
+
+                signalButton.addEventListener('click', startInterval);
+            });
+        </script>
+        </disv>
+        <div class="signal">
+            <button class="btn">Получить<br>сигнал</button>
+        </div>
+    </div>
+</body>
+
+</html>
